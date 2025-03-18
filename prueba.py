@@ -10,9 +10,9 @@ pygame.init()
 
 #y colocamos la pantalla
 
-ANCHO_W, ALTO_W = 1000, 700
+ANCHO_W, ALTO_W = 800, 600
 x_fondo,y_fondo = 0,0
-speed_fondo = 10
+speed_fondo = 8
 pygame.display.set_caption("dungeon figth prebeta/prealfa/preomega/no llega ni a jugable pero es avance")
 pantalla =  pygame.display.set_mode((ANCHO_W,ALTO_W))
 
@@ -30,14 +30,15 @@ class personajes :
 		self.y = y  
 		self.speed = speed 
 		self.ancho = ancho 
-		self.alto = alto
+		self.alto = alto 
+		
 
 
 class proyectil :
 	def __init__(self,bala_speed):
 		self.bala_speed = bala_speed
 
-player = personajes(500,350,8,20,20)
+player = personajes(400,300,5,20,20)
 bala = proyectil(10)
 
 
@@ -47,10 +48,10 @@ fondo = pygame.image.load("fondo_prueba_de_camara.png")
 sprite = pygame.image.load("charles.png")
 
 #crearemos un texto en pantalla
-font = pygame.font.SysFont("PIXEL.ttf",50)
+font = pygame.font.SysFont("PIXEL.ttf",30)
 texto = font.render("DUNGEON", True,(blanco))
 texto_recto = texto.get_rect()
-texto_recto.center = (500,15)
+texto_recto.center = (400,15)
 
 running = True
 balas = []
@@ -73,41 +74,35 @@ while running :
 				})
 
 
-	#hacemos reaparecer las balas
+	#creamos el movimiento del personaje
+
+	#creamos el seguimiento de camara
 
 	for disparo in balas:
 		disparo["x"]+= disparo["dx"]
 		disparo["y"]+= disparo["dy"]
 
-	balas = [x for x in balas if 0 <= x["x"] <= 1000 and 0 <= x["y"] <= 700]
+	balas = [x for x in balas if 0 <= x["x"] <= 800 and 0 <= x["y"] <= 600]
 	#limitando el movimiento del cuadro
-	player.x = max(0,min(1000 - player.ancho, player.x))
-	player.y= max(0,min(700 - player.alto, player.y))
+	player.x = max(0,min(800 - player.ancho, player.x))
+	player.y= max(0,min(600 - player.alto, player.y))
 	keys= pygame.key.get_pressed()
 	if keys[K_w]:
 		player.y-=player.speed
 	if player.y <100 :
 		y_fondo+=speed_fondo
-	elif keys  [K_z]:
-		player.y-=50
 	if keys[K_s]:
 		player.y+=player.speed
-	if player.y >600 :
+	if player.y >500 :
 		y_fondo-=speed_fondo
-	elif keys[K_x]:
-		player.y+=50
 	if keys[K_d]:
 		player.x+=player.speed
 	if player.x <100 :
 		x_fondo+=speed_fondo
-	elif keys[K_c]:
-		player.x-=50
 	if keys[K_a]:
 		player.x-=player.speed
-	if player.x >900 :
+	if player.x >700 :
 		x_fondo-=speed_fondo
-	elif keys[K_v]:
-		player.x+=50
 			
 
 	#dibujamos al personaje y su entornod
@@ -123,8 +118,10 @@ while running :
 
 
 
+
+
+
 	#actualizamos la pantalla
-	pygame.display.update()
 	pygame.display.flip()
 	relog.tick(60)
 
