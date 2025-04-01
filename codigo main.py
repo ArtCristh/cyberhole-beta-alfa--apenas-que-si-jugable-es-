@@ -78,7 +78,6 @@ while running :
 	pantalla.blit(fondo,(x_fondo,y_fondo))
 #aqui mostrarmos todos los textos 
 	pantalla.blit(texto, texto_recto)
-	enemigo.mostrar_enemigo()
 	bala.mostrar_bala()
 	pantalla.blit(sprite,(player.x,player.y,player.ancho,player.alto))
 	#aqui actualizamos la pantalla y los objetos del juego

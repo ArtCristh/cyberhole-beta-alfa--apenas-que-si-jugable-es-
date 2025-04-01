@@ -7,6 +7,7 @@ pantalla =  pygame.display.set_mode((ANCHO_W,ALTO_W))
 fondo = pygame.image.load("fondo_prueba_de_camara.png")
 sprite = pygame.image.load("enemy_base.png")
 enemy_sprite = pygame.transform.scale(sprite,(40,40))
+boss = pygame.transform.scale(sprite,(60,60))
 sprite2 = pygame.image.load("charles.png")
 abajo = pygame.image.load("abajo.png")
 arriba = pygame.image.load("arriba.png")
@@ -15,6 +16,8 @@ derecha = pygame.image.load("derecha.png")
 shoot = pygame.image.load("shoot.png")
 game_over = pygame.image.load("game_over.jpg")
 game_over_trans = pygame.transform.scale(game_over,(400,300))
+sombra = pygame.image.load("sombra.png")
+vida = pygame.image.load("vida.png")
 
 
 balas = []
@@ -95,12 +98,20 @@ class proyectil :
 			pantalla.blit(shoot,(int(disparo["x"]), int(disparo["y"],)))
 	def quitar_balas(self):
 		balas = [x for x in balas if 0 <= x["x"] <= 800 and 0 <= x["y"] <= 600]
-
+class power_up:
+	def __init__(self,x,y,ancho,alto):
+		self.x = x
+		self.y = y
+		self.ancho = ancho
+		self.alto = alto
 
 player = personajes(5,400,300,5,20,20)
 enemigo = enemigos(1,20,400,3.50,20,20)
 bala = proyectil(10)
 
+
+def som(pantalla,sombra):
+	pantalla.blit(sombra,(0,0,800,600))
 
 
 

@@ -25,6 +25,7 @@ recarga = 5
 pygame.display.set_caption("dungeon figth prebeta/prealfa/preomega/no llega ni a jugable pero es avance/ solo falta el factor enemigos y colisiones")
 pantalla =  pygame.display.set_mode((ANCHO_W,ALTO_W))
 
+
 #variables de color
 blanco = (255,255,255)
 negro = (0,0,0)
@@ -112,6 +113,7 @@ texto_recto_2.center = (350,100)
 #creamos un rectangulo para el textoa variable la cual controlara el bucle
 running = True
 
+
 #creamos una lista donde se guardaran las balas
 balas = []
 
@@ -137,10 +139,10 @@ while running :
 
 	balas = [x for x in balas if 0 <= x["x"] <= 800 and 0 <= x["y"] <= 600]
 	#limitando el movimiento del cuadro
-	player.x = max(0,min(800 - player.ancho, player.x))
-	player.y= max(0,min(600 - player.alto, player.y))
-	x_fondo = min(-8,max( 710 - ancho_fondo,x_fondo))
-	y_fondo= min(-8,max(510 - alto_fondo,y_fondo))
+	player.x = max(5,min(780- player.ancho, player.x))
+	player.y= max(5,min(580- player.alto, player.y))
+	x_fondo = min(-100,max( 700 - ancho_fondo,x_fondo))
+	y_fondo= min(-100,max(500 - alto_fondo,y_fondo))
 	
 
 	#dibujamos al personaje y su entornod
@@ -156,11 +158,12 @@ while running :
 	#funcion de perseguir del enemigoç
 		
 		
-		if ammo < 20 :
-			bala.forloop()
-			bala.mostrar_bala()
+		bala.forloop()
+		bala.mostrar_bala()
 		enemy_1(pantalla,enemigo,enemigo2,enemigo3,player)
 		enemy_2(pantalla,enemigo4,enemigo5,enemigo6,player)
+		bosses(pantalla,enemigo7,player)
+		mostrar_power(pantalla,power)
 
 		keys= pygame.key.get_pressed()
 		if keys[K_w]:
@@ -169,7 +172,7 @@ while running :
 			y_fondo+=speed_fondo
 		if keys[K_s]:
 			player.y+=player.speed
-		if player.y >500 :
+		if player.y >=500 :
 			y_fondo-=speed_fondo
 		if keys[K_d]:
 			player.x+=player.speed
@@ -179,17 +182,23 @@ while running :
 			player.x-=player.speed
 		if player.x >700 :
 			x_fondo-=speed_fondo
+		if keys[K_g]:
+			running = False
+
 
 		pantalla.blit(sprite2,(player.x,player.y,player.ancho,player.alto))
-		colisiones(player,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,speed_colision)
+		colisiones(player,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,enemigo7,speed_colision)
+		colision_bala(balas,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,enemigo7)
+		colision_power_up(power,player)
 		
-		if player.vida == 0 :
+
+		if player.vida <=0 :
 			pantalla.fill(negro)
 			pantalla.blit(texto_2, texto_recto_2)
 			pantalla.blit(game_over_trans,(200,200))
 					
-	#actualizamos la pantalla
+	#actualizamos la pantallaBa
 	pygame.display.flip()
-	relog.tick(120)
+	relog.tick(60)
 
 
