@@ -58,18 +58,13 @@ enemigo6 = enemigos(
 		)
 enemigo7 = enemigos(
 		vida=10,
-       	x=400,  # Posición aleatoria en x
-        y=-200,  # Posición aleatoria en y
+       	x=5000,  # Posición aleatoria en x
+        y=-2000,  # Posición aleatoria en y
         speed=1,  # Velocidad aleatoria
         ancho=60,
         alto=60,
 		)
-power = power_up(
-        x=200,  
-        y=200,  
-        ancho=30,
-        alto=30,
-        )
+        
 
 def enemy_1(pantalla,enemigo,enemigo2,enemigo3,player):
 	enemigo.perseguir(player)
@@ -184,7 +179,6 @@ def colision_bala(balas,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,ene
 
         if distancia <= colision_enemy_to :
             enemigo7.vida-= 1
-            print(enemigo7.vida)
             for shot in balas :
                 balas.remove(shot)
             if enemigo7.vida <= 0:
@@ -192,11 +186,6 @@ def colision_bala(balas,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,ene
                 enemigo7.y = 5000
                 enemigo7.vida+= 10
                 break
-def colision_power_up(power,player):
-    if abs(player.x - power.x) <=30 and abs(player.y - power.y) <= 30:
-        player.vida+= 1
-        print(player.vida)
-
 
 
 
