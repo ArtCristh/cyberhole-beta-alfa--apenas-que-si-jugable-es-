@@ -2,7 +2,7 @@
 
 
 x_fondo,y_fondo = 0,0
-speed_fondo = 8
+speed_fondo = 50
 ancho_fondo, alto_fondo = 1700,1500
 ANCHO_W, ALTO_W = 800, 600
 blanco = (255,255,255)

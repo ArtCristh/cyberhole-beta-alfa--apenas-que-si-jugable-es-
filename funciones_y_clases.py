@@ -107,7 +107,7 @@ class power_up:
 
 player = personajes(5,400,300,5,20,20)
 enemigo = enemigos(1,20,400,3.50,20,20)
-bala = proyectil(10)
+bala = proyectil(15)
 
 
 def som(pantalla,sombra):

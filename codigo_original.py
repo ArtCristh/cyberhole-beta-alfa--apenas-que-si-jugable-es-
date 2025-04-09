@@ -17,7 +17,7 @@ ancho_fondo, alto_fondo = 1700,1500
 
 ANCHO_W, ALTO_W = 800, 600
 inicio = time.time()
-intervalo_bala =0.3 
+intervalo_bala =0.1 
 ammo = 0
 recarga = 5
 #creamos algunas variables necesarias
@@ -103,26 +103,41 @@ relog = pygame.time.Clock()
 #crearemos un texto en pantalla
 
 
-font = pygame.font.SysFont("PIXEL.ttf",50)
-texto = font.render("dungeon", True,(blanco))
+font = pygame.font.SysFont("DS-TERM.TTF",50)
+texto = font.render("PRACTICE HOLE ", True,(blanco))
 texto_recto = texto.get_rect()
 #   lo centramos
-texto_recto.center = (400,15)
+texto_recto.center = (400,20)
 
-Font = pygame.font.SysFont("PIXEL.ttf",10000000)
+Font = pygame.font.SysFont("DS-TERM.TTF",100)
 texto_2 = font.render("GAME OVER", True,(blanco))
 texto_recto_2 = texto_2.get_rect()
 #   lo centramos
-texto_recto_2.center = (400,30)
+texto_recto_2.center = (400,50)
+
+Lont = pygame.font.SysFont("DS-TERM.TTf",50)
+texto_main = font.render("<CYBER_HOLE>", True,(blanco))
+texto_recto_main = texto_main.get_rect()
+#   lo centramos
+texto_recto_main.center = (400,100)
+
+Lont = pygame.font.SysFont("DS-TERM.TTf",100)
+texto_LEVEL2 = font.render("<CONTINUE?>", True,(blanco))
+texto_recto_LEVEL2 = texto_main.get_rect()
+#   lo centramos
+texto_recto_LEVEL2.center = (400,200)
 
 #creamos un rectangulo para el textoa variable la cual controlara el bucle
-running = True
-nivel = 0
+nivel_1= True
+nivel_2= False
+stage = 0
 
 #creamos una lista donde se guardaran las balas
 balas = []
 #timer no tocar
-tiempo_restante = 5*60
+tiempo_restante = 5
+
+intentos= 1000
 
 
 ultimo_tick = pygame.time.get_ticks()
@@ -130,22 +145,25 @@ ultimo_tick = pygame.time.get_ticks()
 
 #creamos el bucle principal de el juego
 
-while running :
+while nivel_1 :
 	tiempo_actual = time.time()
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			running = False
+			nivel_1= False
 		if tiempo_actual - inicio>= intervalo_bala:
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
 				mouse_posicion = pygame.mouse.get_pos()
 				ammo+=1
 
 				bala.trayectoria()
+
 				inicio = tiempo_actual
-		if nivel == 0:
+		if stage == 0:
 			pantalla.fill(negro)
+			pantalla.blit(texto_main, texto_recto_main)
 			if event.type == pygame.KEYDOWN and event.key== K_SPACE:
-				nivel+=1
+				stage+=1
+
 
 			#calculamos la trayectoria
 				
@@ -157,8 +175,8 @@ while running :
 
 	balas = [x for x in balas if 0 <= x["x"] <= 800 and 0 <= x["y"] <= 600]
 	#limitando el movimiento del cuadro
-	player.x = max(5,min(780- player.ancho, player.x))
-	player.y= max(5,min(580- player.alto, player.y))
+	player.x = max(0,min(780- player.ancho, player.x))
+	player.y= max(0,min(565- player.alto, player.y))
 	x_fondo = min(-100,max( 700 - ancho_fondo,x_fondo))
 	y_fondo= min(-100,max(500 - alto_fondo,y_fondo))
 	
@@ -170,14 +188,173 @@ while running :
 	
 
 
-	if nivel==1 :
+	if stage==1 :
+		if player.vida>=1:
+		
+			tiempo_actual = pygame.time.get_ticks()
+			pantalla.blit(fondo,(x_fondo,y_fondo))
+			if tiempo_restante <= 250:
+				enemy_1(pantalla,enemigo,enemigo2,enemigo3,player)
+				enemy_2(pantalla,enemigo4,enemigo5,enemigo6,player)
+				bosses(pantalla,enemigo7,player)
+				colisiones(player,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,enemigo7,speed_colision)
+				colision_bala(balas,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,enemigo7)
+			pantalla.blit(sprite2,(player.x,player.y,player.ancho,player.alto))
+
+
+			pantalla.blit(texto, texto_recto)
+			if tiempo_restante <= 200:
+				enemy_3(pantalla,enemigo8,enemigo9,enemigo10,player)
+				enemy_4(pantalla,enemigo11,enemigo12,enemigo14,player)
+				bosses_2(pantalla,enemigo15,player)
+				colisiones_2(player,enemigo8,enemigo9,enemigo10,enemigo11,enemigo12,enemigo14,enemigo15,speed_colision)
+				colision_bala_2(balas,enemigo8,enemigo9,enemigo10,enemigo11,enemigo12,enemigo14,enemigo15)
+
+			
+
+			
+			
+
+			
+
+			if tiempo_actual - ultimo_tick >= 1000:
+
+				if tiempo_restante> 0 :
+					tiempo_restante -= 1
+					ultimo_tick = tiempo_actual
+					
+					breakpoint
+
+			minutos = tiempo_restante//60
+			segundos = tiempo_restante%60
+			exto= f"{minutos:02}:{segundos:02}"
+			contador =pygame.font.SysFont("DS-TERM.TTF",100)
+			contador_tex=font.render(exto,True,(blanco))
+			contador_rect = contador_tex.get_rect()
+			contador_rect.center =(400,50)
+
+			pantalla.blit(contador_tex,contador_rect)
+
+			
+			#lopp para la generacion de las balas
+		#funcion de perseguir del enemigoç
+			
+			
+			bala.forloop()
+			bala.mostrar_bala()
+			
+
+			keys= pygame.key.get_pressed()
+			if keys[K_w]:
+				player.y-=player.speed
+			if player.y <150 :
+				y_fondo+=speed_fondo
+			if keys[K_s]:
+				player.y+=player.speed
+			if player.y >=450 :
+				y_fondo-=speed_fondo
+			if keys[K_d]:
+				player.x+=player.speed
+			if player.x <150 :
+				x_fondo+=speed_fondo
+			if keys[K_a]:
+				player.x-=player.speed
+			if player.x >650 :
+				x_fondo-=speed_fondo
+			if keys[K_g]:
+				nivel_1 = False
+
+
+			
+			
+		
+
+
+		if tiempo_restante <= 0 :
+			stage+=2
+			if stage==3:
+				pantalla.fill(negro)
+				nivel_1 = False
+				time.sleep(2)
+				nivel_2=True
+		elif player.vida <=0 :
+			stage+= 1
+			if stage==2:
+				time.sleep(2)
+				pantalla.fill(negro)
+				pantalla.blit(texto_2,texto_recto_2)
+				pantalla.blit(game_over_trans,(200,200))
+				player.vida=5
+				tiempo_restante=5*60
+				stage=0
+
+
+
+	pygame.display.update()
+	relog.tick(120)
+
+tiempo_restante= 5*60
+
+stage2=0
+
+
+while nivel_2 :
+	tiempo_actual = time.time()
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			nivel_2= False
+		if tiempo_actual - inicio>= intervalo_bala:
+			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+				mouse_posicion = pygame.mouse.get_pos()
+				ammo+=1
+
+				bala.trayectoria()
+				inicio = tiempo_actual
+		if stage2 == 0:
+			pantalla.fill(negro)
+			pantalla.blit(texto_LEVEL2, texto_recto_LEVEL2)
+			if event.type == pygame.KEYDOWN and event.key== K_SPACE:
+				stage2+=1
+
+			#calculamos la trayectoria
+				
+	
+
+	
+	
+	#iteracion de las bala
+
+	balas = [x for x in balas if 0 <= x["x"] <= 800 and 0 <= x["y"] <= 600]
+	#limitando el movimiento del cuadro
+	player.x = max(0,min(780- player.ancho, player.x))
+	player.y= max(0,min(565- player.alto, player.y))
+	x_fondo = min(-100,max( 700 - ancho_fondo,x_fondo))
+	y_fondo= min(-100,max(500 - alto_fondo,y_fondo))
+	
+
+	#dibujamos al personaje y su entornod
+
+	
+	#bucle para  que se generen balas y se creen infinitamente
+	
+
+
+	if stage2==1 :
+		
 		tiempo_actual = pygame.time.get_ticks()
 		pantalla.blit(fondo,(x_fondo,y_fondo))
-		pantalla.blit(texto, texto_recto)
-		enemy_1(pantalla,enemigo,enemigo2,enemigo3,player)
-		enemy_2(pantalla,enemigo4,enemigo5,enemigo6,player)
-		bosses(pantalla,enemigo7,player)
+		if tiempo_restante <= 250:
+			enemy_1(pantalla,enemigo,enemigo2,enemigo3,player)
+			enemy_2(pantalla,enemigo4,enemigo5,enemigo6,player)
+			bosses(pantalla,enemigo7,player)
+			colisiones(player,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,enemigo7,speed_colision)
 		pantalla.blit(sprite2,(player.x,player.y,player.ancho,player.alto))
+		pantalla.blit(texto, texto_recto)
+		if tiempo_restante <= 200:
+			enemy_3(pantalla,enemigo8,enemigo9,enemigo10,player)
+			enemy_4(pantalla,enemigo11,enemigo12,enemigo14,player)
+			bosses_2(pantalla,enemigo15,player)
+		
 
 		
 
@@ -192,10 +369,10 @@ while running :
 		minutos = tiempo_restante//60
 		segundos = tiempo_restante%60
 		exto= f"{minutos:02}:{segundos:02}"
-		contador =pygame.font.SysFont("PIXEL.tff",10000)
+		contador =pygame.font.SysFont("DS-TERM.TTF",100)
 		contador_tex=font.render(exto,True,(blanco))
 		contador_rect = contador_tex.get_rect()
-		contador_rect.center =(100,30)
+		contador_rect.center =(400,50)
 
 		pantalla.blit(contador_tex,contador_rect)
 
@@ -211,40 +388,46 @@ while running :
 		keys= pygame.key.get_pressed()
 		if keys[K_w]:
 			player.y-=player.speed
-		if player.y <100 :
+		if player.y <150 :
 			y_fondo+=speed_fondo
 		if keys[K_s]:
 			player.y+=player.speed
-		if player.y >=500 :
+		if player.y >=450 :
 			y_fondo-=speed_fondo
 		if keys[K_d]:
 			player.x+=player.speed
-		if player.x <100 :
+		if player.x <150 :
 			x_fondo+=speed_fondo
 		if keys[K_a]:
 			player.x-=player.speed
-		if player.x >700 :
+		if player.x >650 :
 			x_fondo-=speed_fondo
 		if keys[K_g]:
-			running = False
+			nivel_2 = False
 
 
 		
 		colisiones(player,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,enemigo7,speed_colision)
+		colisiones_2(player,enemigo8,enemigo9,enemigo10,enemigo11,enemigo12,enemigo14,enemigo15,speed_colision)
 		colision_bala(balas,enemigo,enemigo2,enemigo3,enemigo4,enemigo5,enemigo6,enemigo7)
-
+		colision_bala_2(balas,enemigo8,enemigo9,enemigo10,enemigo11,enemigo12,enemigo14,enemigo15)
 		
 
 		if player.vida <=0 :
-			pantalla.fill(negro)
-			pantalla.blit(texto_2,texto_recto_2)
-			pantalla.blit(game_over_trans,(200,200))
-		elif tiempo_restante <= 0 :
-			pantalla.fill(negro)
+			stage2+= 1
+			if stage==2:
+				pantalla.fill(negro)
+				pantalla.blit(texto_2,texto_recto_2)
+				pantalla.blit(game_over_trans,(200,200))
+		elif tiempo_restante == 0 :
+			stage2+=2
+			if stage2==3:
+				pantalla.fill(negro)
+
+
 					
 	#actualizamos la pantallaBa
-	pygame.display.update()
 	pygame.display.flip()
-	relog.tick(60)
+	relog.tick(120)
 
 
